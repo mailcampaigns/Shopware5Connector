@@ -29,9 +29,6 @@ class Quote extends Resource
      */
     public function getList($offset = 0, $limit = 25, array $criteria = [], array $orderBy = [])
     {
-        //$builder = Shopware()->Models()->createQueryBuilder();
-        //$builder->select(['quote'])->from(\MailCampaignsConnector\Models\Quote\Quote::class, 'quote');
-		
 		$builder = $this->getRepository()->createQueryBuilder('quote');
         
 		$builder
@@ -105,48 +102,6 @@ class Quote extends Resource
         if (!$quote) {
             throw new ApiException\NotFoundException("Quote by id $id not found");
         }
-
-        return $quote;
-    }
-
-    /**
-     * @param $id
-     * @param array $params
-     * @return null|object
-     * @throws ApiException\ValidationException
-     * @throws ApiException\NotFoundException
-     * @throws ApiException\ParameterMissingException
-     */
-    public function update($id, array $params)
-    {
-        $this->checkPrivilege('update');
-
-        if (empty($id)) {
-            throw new ApiException\ParameterMissingException();
-        }
-
-        /** @var $quote QuoteModel */
-        $builder = $this->getRepository()
-            ->createQueryBuilder('Quote')
-            ->select('Quote')
-            ->where('Quote.id = ?1')
-            ->setParameter(1, $id);
-
-        /** @var QuoteModel $quote */
-        $quote = $builder->getQuery()->getOneOrNullResult(self::HYDRATE_OBJECT);
-
-        if (!$quote) {
-            throw new ApiException\NotFoundException("Quote by id $id not found");
-        }
-
-        $quote->fromArray($params);
-
-        $violations = $this->getManager()->validate($quote);
-        if ($violations->count() > 0) {
-            throw new ApiException\ValidationException($violations);
-        }
-
-        $this->flush();
 
         return $quote;
     }

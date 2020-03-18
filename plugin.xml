@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
-    <label lang="en">MailCampaigns 5 Connector</label>
-    <version>1.0.0</version>
-    <author>MailCampaigns</author>
-    <compatibility minVersion="5.2.0"/>
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
+<label lang="en">MailCampaigns 5 Connector</label>
+<label lang="de">MailCampaigns 5 Connector</label>
+<version>1.0.1</version>
+<copyright>MailCampaigns</copyright>
+<license>GPL v3</license>
+<link>https://www.mailcampaigns.nl</link>
+<author>Max Seelig – MailCampaigns</author>
+<compatibility minVersion="5.2.0"/>
+<changelog version="1.0.1">
+   <changes>
+        <![CDATA[
+        Fix for retrieving all newsletter subscribers
+        Cleaned up code
+        ]]>
+   </changes>
+   <changes lang="de">
+        <![CDATA[
+        Fix für das Abrufen aller Newsletter-Abonnenten
+        Code bereinigt
+        ]]>
+   </changes>
+</changelog>
+<changelog version="1.0.0">
+   <changes>
+        <![CDATA[
+        First release
+        ]]>
+   </changes>
+   <changes lang="de">
+        <![CDATA[
+        Erstveröffentlichung
+        ]]>
+   </changes>
+</changelog>
+<description>
+   <![CDATA[
+   <b>MailCampaigns 5 Connector</b>
+   <p>Enable e-mail marketing easily and successfully. Sync your Shopware with MailCampaigns. Community Store: <a href="https://store.shopware.com/en/mailc73148351382/mailcampaigns-connect-shopware-5.html">Plugin Manual</a></p>
+   ]]>
+</description>
+<description lang="de">
+   <![CDATA[
+   <b>MailCampaigns 5 Connector</b>
+   <p>Machen Sie e-mail Marketing einfach und erfolgreich. Synchronisieren sie ihre Shopware mit MailCampaigns. Community Store: <a href="https://store.shopware.com/mailc73148351382/mailcampaigns-connect-shopware-5.html">Plugin Anleitung</a></p>
+   ]]>
+</description>
 </plugin>

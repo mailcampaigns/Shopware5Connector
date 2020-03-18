@@ -3,7 +3,8 @@
 namespace Shopware\Components\Api\Resource;
 
 use Shopware\Components\Api\Exception as ApiException;
-use MailCampaignsConnector\Models\Subscriber\Subscriber as SubscriberModel;
+use MailCampaignsConnector\Models\MailAddresses\MailAddresses as MailAddressesModel;
+use MailCampaignsConnector\Models\MailData\MailData as MailDataModel;
 
 /**
  * Class Subscriber
@@ -17,20 +18,20 @@ class Subscriber extends Resource
      */
     public function getRepository()
     {
-        return $this->getManager()->getRepository(SubscriberModel::class);
+        return $this->getManager()->getRepository(MailAddressesModel::class);
     }
 
     /**
      * Create new Subscriber
      *
      * @param array $params
-     * @return SubscriberModel
+     * @return MailAddressesModel
      * @throws ApiException\ValidationException
      */
     public function create(array $params)
     {
-        /** @var SubscriberModel $subscriber */
-        $subscriber = new SubscriberModel();
+        /** @var MailAddressesModel $subscriber */
+        $subscriber = new MailAddressesModel();
 
         $subscriber->fromArray($params);
 
@@ -58,15 +59,9 @@ class Subscriber extends Resource
      */
     public function getList($offset = 0, $limit = 25, array $criteria = [], array $orderBy = [])
     {
-        // $builder = Shopware()->Models()->createQueryBuilder();
-        // $builder->select(['s.id, s.email, s'])
-        //     ->from(\MailCampaignsConnector\Models\Subscriber\Subscriber::class, 's');
-        // $results = $builder->getQuery()->getArrayResult();
-        // $getDql = $builder->getDql();
-        // $getSql = $builder->getQuery()->getSql();
-        // return ['data' => $results, 'getDql' => $getDql, 'getSql' => $getSql];
-        
         $builder = $this->getRepository()->createQueryBuilder('subscriber');
+        $builder->select('subscriber.id','subscriber.customer','subscriber.groupID','subscriber.email','subscriber.lastmailing','subscriber.lastread','subscriber.added','subscriber.double_optin_confirmed','m.salutation','m.title','m.firstname','m.lastname','m.street','m.zipcode','m.city','m.deleted')
+            ->leftJoin(\MailCampaignsConnector\Models\MailData\MailData::class, 'm', 'WITH', 'm.email = subscriber.email');
         $builder->addFilter($criteria)
             ->addOrderBy($orderBy)
             ->setFirstResult($offset)
@@ -94,32 +89,6 @@ class Subscriber extends Resource
     }
 
     /**
-     * Delete Existing Subscriber
-     *
-     * @param $id
-     * @return null|object
-     * @throws ApiException\NotFoundException
-     * @throws ApiException\ParameterMissingException
-     */
-    public function delete($id)
-    {
-        $this->checkPrivilege('delete');
-
-        if (empty($id)) {
-            throw new ApiException\ParameterMissingException();
-        }
-
-        $subscriber = $this->getRepository()->find($id);
-
-        if (!$subscriber) {
-            throw new ApiException\NotFoundException("Subscriber by id $id not found");
-        }
-
-        $this->getManager()->remove($subscriber);
-        $this->flush();
-    }
-
-    /**
      * Get One Subscriber Information
      *
      * @param $id
@@ -135,60 +104,20 @@ class Subscriber extends Resource
             throw new ApiException\ParameterMissingException();
         }
 
-        $builder = $this->getRepository()
-            ->createQueryBuilder('Subscriber')
-            ->select('Subscriber')
-            ->where('Subscriber.id = ?1')
+        $builder = $this->getRepository()->createQueryBuilder('subscriber');
+        $builder->select('subscriber.id','subscriber.customer','subscriber.groupID','subscriber.email','subscriber.lastmailing','subscriber.lastread','subscriber.added','subscriber.double_optin_confirmed','m.salutation','m.title','m.firstname','m.lastname','m.street','m.zipcode','m.city','m.deleted')
+            ->leftJoin(\MailCampaignsConnector\Models\MailData\MailData::class, 'm', 'WITH', 'm.email = subscriber.email');
+            $builder->where('subscriber.id = ?1')
             ->setParameter(1, $id);
+        $query = $builder->getQuery();
+        $query->setHydrationMode($this->resultMode);
 
-        /** @var SubscriberModel $subscriber */
+        /** @var MailAddressesModel $subscriber */
         $subscriber = $builder->getQuery()->getOneOrNullResult($this->getResultMode());
 
         if (!$subscriber) {
             throw new ApiException\NotFoundException("Subscriber by id $id not found");
         }
-
-        return $subscriber;
-    }
-
-    /**
-     * @param $id
-     * @param array $params
-     * @return null|object
-     * @throws ApiException\ValidationException
-     * @throws ApiException\NotFoundException
-     * @throws ApiException\ParameterMissingException
-     */
-    public function update($id, array $params)
-    {
-        $this->checkPrivilege('update');
-
-        if (empty($id)) {
-            throw new ApiException\ParameterMissingException();
-        }
-
-        /** @var $subscriber SubscriberModel */
-        $builder = $this->getRepository()
-            ->createQueryBuilder('Subscriber')
-            ->select('Subscriber')
-            ->where('Subscriber.id = ?1')
-            ->setParameter(1, $id);
-
-        /** @var SubscriberModel $subscriber */
-        $subscriber = $builder->getQuery()->getOneOrNullResult(self::HYDRATE_OBJECT);
-
-        if (!$subscriber) {
-            throw new ApiException\NotFoundException("Subscriber by id $id not found");
-        }
-
-        $subscriber->fromArray($params);
-
-        $violations = $this->getManager()->validate($subscriber);
-        if ($violations->count() > 0) {
-            throw new ApiException\ValidationException($violations);
-        }
-
-        $this->flush();
 
         return $subscriber;
     }
