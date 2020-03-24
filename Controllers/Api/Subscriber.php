@@ -24,11 +24,11 @@ class Shopware_Controllers_Api_Subscriber extends Shopware_Controllers_Api_Rest
         $offset = $this->Request()->getParam('start', 0);
         $sort = $this->Request()->getParam('sort', []);
         $filter = $this->Request()->getParam('filter', []);
-
-        $result = $this->resource->getList($offset, $limit, $filter, $sort);
+        $optin = $this->Request()->getParam('optin', 2);
+        $result = $this->resource->getList($offset, $limit, $filter, $sort, $optin);
         $this->View()->assign(['success' => true, 'data' => $result]);
     }
-    
+
 
     /**
      * Get one Subscriber

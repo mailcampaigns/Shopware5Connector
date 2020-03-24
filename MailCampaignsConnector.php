@@ -3,6 +3,7 @@
 namespace MailCampaignsConnector;
 
 use Shopware\Components\Plugin;
+use Shopware\Components\Plugin\Context\InstallContext;
 
 class MailCampaignsConnector extends Plugin
 {
@@ -22,6 +23,23 @@ class MailCampaignsConnector extends Plugin
     public function onGetSubscriberApiController()
     {
         return $this->getPath() . '/Controllers/Api/Subscriber.php';
+    }
+
+    public function install(InstallContext $context)
+    {
+
+
+        $attributeService = $this->container->get('shopware_attribute.crud_service');
+
+        $attributeService->update(
+            's_order_details_attributes',
+            'comment',
+            'text', [
+                'displayInBackend' => true,
+                'label' => 'Article comment'
+            ]
+        );
+
     }
 
     /**

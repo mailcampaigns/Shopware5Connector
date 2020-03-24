@@ -5,6 +5,29 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+            <service class="MailCampaignsConnector\Subscribers\FrontendNewsletterSubscriber" id="mail_campaigns_connector.subscribers.frontend_newsletter_subscriber">
+                <argument type="service" id="models" />
+                <argument type="service" id="modules" />
+                <tag name="shopware.event_subscriber"/>
+            </service>
+
+        <service id="mail_campaigns_connector.mail_service" class="MailCampaignsConnector\Components\Services\MailService">
+            <argument type="service" id="models" />
+        </service>
+
+        <service id="mail_campaigns_connector.un_subscribe_service" class="MailCampaignsConnector\Components\Services\UnSubscribeService">
+            <argument type="service" id="models" />
+        </service>
+
+
+        <service id="mail_campaigns_connector.customer_resource"
+                 class="MailCampaignsConnector\Components\Api\Resource\Customer"
+                 decorates="shopware.api.customer"
+                 public="true"
+                 shared="true">
+            <argument type="service" id="mail_campaigns_connector.mail_service" />
+        </service>
 
     </services>
 </container>
+

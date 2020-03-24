@@ -8,6 +8,20 @@
 <link>https://www.mailcampaigns.nl</link>
 <author>Max Seelig – MailCampaigns</author>
 <compatibility minVersion="5.2.0"/>
+<changelog version="1.0.2">
+   <changes>
+        <![CDATA[
+        Extra call to unsubscribe
+        Extra field for opt-in status
+        ]]>
+   </changes>
+   <changes lang="de">
+        <![CDATA[
+        Extra call to unsubscribe
+        Extra field for opt-in status
+        ]]>
+   </changes>
+</changelog>
 <changelog version="1.0.1">
    <changes>
         <![CDATA[
